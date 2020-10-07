@@ -170,6 +170,6 @@ def main3():
 
 if __name__ == '__main__':
     print('Uncomment the function you want to try')
-    main1()  # You should understand
-    main2()  # You should understand
-    main3()  # Similar to reprint, use it if you can "feel" what it is doing or you have problem in using reprint
+    #main1()  # You should understand
+    #main2()  # You should understand
+    #main3()  # Similar to reprint, use it if you can "feel" what it is doing or you have problem in using reprint
