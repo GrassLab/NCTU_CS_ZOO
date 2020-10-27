@@ -19,6 +19,8 @@ class CameraControl(object):
     def get_stream_img(self):
         if not self.cam.is_streaming:
             self.cam.start_stream_thd()
+        while self.cam.stream_img is None:
+            pass
         return self.cam.stream_img
 
     def set_jpeg(self):
