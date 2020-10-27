@@ -33,6 +33,12 @@ def camera_calibration_chessboard(camera, square_sz, board_size, file_path):
         cv2.imshow("Chessboard Corner", vis)
         k = cv2.waitKey(30)
         if k == ord('1') and ret:
+            # Ensure that all corner-arrays are going from top to bottom.
+            # ref: https://github.com/ros-perception/image_pipeline/blob/noetic/camera_calibration/src/camera_calibration/calibrator.py#L214
+            if corners[0, 0, 1] > corners[-1, 0, 1]:
+                corners = np.copy(np.flipud(corners))
+                print("flip!")
+            world_points.append(objpoints)
             world_points.append(objpoints)
             img_points.append(corners)
             print('Pattern {} saved'.format(len(world_points)))
