@@ -14,7 +14,7 @@ def camera_calibration_chessboard(camera, square_sz, board_size, file_path):
     :param file_path: intrinsics save file path
     :return: intrinsic
     """
-    os.putenv('DISPLAY', ':0')
+    # os.putenv('DISPLAY', ':0')
     check_path(osp.dirname(file_path))
     h, w = camera.get_stream_img().shape[:2]
     # Chessboard Mapping
