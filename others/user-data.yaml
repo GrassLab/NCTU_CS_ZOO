@@ -1,0 +1,107 @@
+#cloud-config
+# vim: syntax=yaml
+#
+
+# refer to https://cloudinit.readthedocs.io/en/latest/topics/examples.html get more information
+
+# Set your hostname here, the manage_etc_hosts will update the hosts file entries as well
+hostname: duckie0
+manage_etc_hosts: true
+
+resize_rootfs: true
+growpart:
+    mode: auto
+    devices: ["/"]
+    ignore_growroot_disabled: false
+
+# You could modify this for your own user information
+users:
+  - name: duckie
+    gecos: "Duckie"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    groups: users,docker,video,input,i2c
+    plain_text_passwd: "duckie"
+    lock_passwd: false
+    ssh_pwauth: true
+    chpasswd: { expire: false }
+  - name: TA
+    gecos: "TA"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    groups: users,docker,video,input,i2c
+    lock_passwd: true
+    ssh_authorized_keys:
+    - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDmGb51TnaKwDGROPc3Fakc7bjfFe+RkCnm9QJK0ISaejYeezrDg/+9Ur1M0G6UiJlFXX2GOkQQ8fn4I+5bSH6DQBplGhZFIN5YklXBz73Hnz9UsHO7nzpVQFXLFeZOsBfBeDw6wITwrnBYeR612y/7Ir6/mTtn1VGs68MxnqzbB/vyx0dJrJVUFzyi7lJ/2Nn4j2ZSqXCHm67WaO7fnJs0aTsMpcHQ6H6cS6h3IKWtcbNgN2dqAH2SVHndkvVRrsI12y6SgrpnR8IMWVLwaAHjA/AETKJNLn5ALAZ9Jq2A4VlF/Bm/ZJDmmZwltKDRmYcVKU129ztzF7vJboaf03J7"
+
+# # Set the locale of the system
+locale: "en_US.UTF-8"
+
+# # Set the timezone
+# Value of 'timezone' must exist in /usr/share/zoneinfo
+timezone: "Asia/Taipei"
+
+# # Update apt packages on first boot
+#package_update: true
+#package_upgrade: true
+#package_reboot_if_required: true
+package_upgrade: false
+
+# # Install any additional apt packages you need here
+packages:
+  - ntp
+
+# # WiFi connect to HotSpot
+# - use `wpa_passphrase SSID PASSWORD` to encrypt the psk
+write_files:
+  - content: |
+      allow-hotplug wlan0
+      iface wlan0 inet dhcp
+      wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+      iface default inet dhcp
+    path: /etc/network/interfaces.d/wlan0
+  - content: |
+      ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+      update_config=1
+      network={
+        ssid="duckietown"
+        psk=d341c51267daf7e7bc551dcb9edaf4725becbf976449a51a1935197e0939fd93
+        priority=1000
+      }
+      network={
+        ssid="home_wifi_network"
+        psk="home_wifi_password"
+        priority=100
+      }
+      network={
+        ssid="cellphone_wifi_network"
+        psk="cellphone_wifi_password"
+        priority=10
+      }
+    path: /etc/wpa_supplicant/wpa_supplicant.conf
+  - path: /etc/cron.d/nctu_cs_zoo
+    owner: root:root
+    permissions: '0644'
+    content: |
+      SHELL=/bin/bash
+      PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+      @reboot root iw wlan0 set power_save off
+  - path: /etc/modules-load.d/nctu_cs_zoo.conf
+    owner: root:root
+    permissions: '0644'
+    content: |
+      # load driver for i2c
+      i2c-dev
+      i2c-bcm2835
+
+# These commands will be ran once on first boot only
+runcmd:
+  # Pickup the hostname changes
+  - 'systemctl restart avahi-daemon'
+
+  # Activate WiFi interface
+  - 'ifup wlan0'
+
+  # load driver for i2c when first time booting
+  - 'modprobe i2c-dev i2c-bcm2835'
