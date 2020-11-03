@@ -2,7 +2,7 @@ import numpy as np
 import cv2, os, joblib
 import os.path as osp
 from utils.fileutils import check_path
-from camera_control import CameraControl
+from controllers.camera_control import CameraControl
 
 
 def camera_calibration_chessboard(camera, square_sz, board_size, file_path):
