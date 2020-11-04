@@ -1,11 +1,13 @@
 from drivers.camera import CameraDevice
+import cv2
 
 
 class CameraControl(object):
     def __init__(self, img_fmt='bgr'):
         self.cam = CameraDevice(img_fmt)
+        self.data = {}
 
-    def capture(self):
+    def get_capture_img(self):
         return self.cam.capture()
 
     def start_stream(self):
@@ -50,6 +52,27 @@ class CameraControl(object):
 
     def decode_jpeg(self):
         return self.cam.decode_jpeg
+
+    def set_cam_calibration(self, cam_K, cam_D, img_h, img_w):
+        self.data['cam_K'] = cam_K
+        self.data['cam_D'] = cam_D
+        self.data['cam_K_new'], self.data['cam_ROI_new'] = cv2.getOptimalNewCameraMatrix(cam_K, cam_D, (img_w, img_h),
+                                                                                         0, (img_w, img_h))
+        self.data['rect_mapx'], self.data['rect_mapy'] = cv2.initUndistortRectifyMap(cam_K, cam_D, None,
+                                                                                     self.data['cam_K_new'],
+                                                                                     (img_w, img_h), 5)
+        self.data['cam_calib'] = True
+
+    def get_rectified_image(self, img=None):
+        assert self.data['cam_calib'], 'Call set_cam_calibration to set calibration data '
+        if img is None:
+            img = self.get_capture_img()
+        dst = cv2.remap(img, self.data['rect_mapx'], self.data['rect_mapy'], cv2.INTER_CUBIC)
+
+        # # crop the image
+        x, y, w, h = self.data['cam_ROI_new']
+        dst_crop = dst[y:y + h, x:x + w]
+        return dst_crop
 
     def __del__(self):
         self.stop_stream()
