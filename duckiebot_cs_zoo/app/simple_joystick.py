@@ -1,12 +1,9 @@
-from controllers.motor_control import *
-from app.kinematics_calculator import *
-from msg_types import Twist2DStamp
-import time
+try:
+    from librarys.car_control import CarControl
+except ImportError:
+    from ..librarys.car_control import CarControl
 
-
-motor_control = MotorControl()
-kinematics_cal = KinematicsCaculator()
-
+duckie_car = CarControl(trim_val=0.0)
 
 while True:
     key = input("Cmd: ")
@@ -27,13 +24,12 @@ while True:
     elif key == " ":
         omega = 0
         velocity = 0
+    elif key == "q":
+        break
     else:
         continue
 
-    cmd = Twist2DStamp(time.time_ns(), omega, velocity)
-    now_twist, motor_cmd = kinematics_cal.transfer(cmd)
-    cur_time = time.time_ns()
-    now_twist.time_ns = cur_time
-    motor_cmd.time_ns = cur_time
-    motor_control.move(motor_cmd)
-
+    duckie_car.move(
+        velocity=velocity,
+        omega=omega,
+    )
