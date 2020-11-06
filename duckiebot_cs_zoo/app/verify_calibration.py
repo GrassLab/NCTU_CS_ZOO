@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from os import path as osp
 import joblib
-from librarys.camera_control import CameraControl
+from libs.camera_control import CameraControl
 
 
 def run_verify_calibration():

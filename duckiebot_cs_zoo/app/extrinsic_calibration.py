@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from os import path as osp
 import joblib
-from librarys.camera_control import CameraControl
+from libs.camera_control import CameraControl
 
 X_OFFSET = 0.191
 Y_OFFSET = 0.093

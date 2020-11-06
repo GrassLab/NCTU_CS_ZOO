@@ -1,7 +1,7 @@
 try:
-    from librarys.car_control import CarControl
+    from libs.car_control import CarControl
 except ImportError:
-    from ..librarys.car_control import CarControl
+    from ..libs.car_control import CarControl
 
 duckie_car = CarControl(trim_val=0.0)
 
