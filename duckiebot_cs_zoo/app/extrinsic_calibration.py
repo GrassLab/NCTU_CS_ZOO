@@ -30,7 +30,7 @@ def run_extrinsic_calibration(square_sz=0.031, board_size=(8, 6)):
         vis = cv2.drawChessboardCorners(rgb_rectified, (corner_u, corner_v), corners, ret)
         cv2.imshow("Chessboard Corner", vis)
         k = cv2.waitKey(30)
-        if k == ord('q') and ret:
+        if k == ord(' ') and ret:
             break
     # Check board points
 
