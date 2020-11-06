@@ -90,7 +90,6 @@ def validate_calibration(camera, square_sz, board_size, folder_path, intrinsics_
             gray = cv2.cvtColor(dst_crop, cv2.COLOR_BGR2GRAY)
             ret, corners = cv2.findChessboardCornersSB(gray, (corner_u, corner_v))
             dst_crop = cv2.drawChessboardCorners(dst_crop, (corner_u, corner_v), corners, ret)
-        cv2.imshow('Un-distort', dst)
         cv2.imshow('Rectified', dst_crop)
         k = cv2.waitKey(20)
         if ord('q') == k:
