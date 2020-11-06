@@ -5,7 +5,7 @@ import joblib
 from librarys.camera_control import CameraControl
 
 
-def run_verify_calibration(square_sz=0.031, board_size=(8, 6)):
+def run_verify_calibration():
     camera = CameraControl()
     # set intrinsic data
     folder_path = osp.join(osp.dirname(osp.abspath(__file__)), 'data', 'camera_calibration')
