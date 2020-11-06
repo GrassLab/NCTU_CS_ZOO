@@ -80,6 +80,7 @@ class CameraDevice:
                 )
             except StopIteration:  # self.stop_stream=True, one time only
                 pass
+        self.camera.close()
         print('Streaming stop')
 
     def start_stream_thd(self):
