@@ -36,10 +36,6 @@ def collect_camera_calibration_chessboard(camera, square_sz, board_size, folder_
     h, w = camera.get_stream_img().shape[:2]
     # Chessboard Mapping
     corner_u, corner_v = board_size[0] - 1, board_size[1] - 1
-    objpoints = np.zeros((corner_u * corner_v, 3), dtype=np.float32)
-    objpoints[:, 0:2] = np.mgrid[0:corner_u, 0:corner_v].T.reshape(-1, 2) * square_sz  # (su-1)x(sv-1)x3
-    world_points = []
-    img_points = []
     print(
         'Collecting frames from camera,press 1 to collect, q to finish. Display shows once the Chessboard is detected')
     success_count = 0
@@ -56,10 +52,7 @@ def collect_camera_calibration_chessboard(camera, square_sz, board_size, folder_
             success_count += 1
             print('Pattern {} saved'.format(success_count))
         elif k == ord('q'):
-            if success_count < 20:
-                print('Please collect at least 20 images')
-            else:
-                break
+            break
 
 def run_image_collect():
     DEFAULT_DATA_PATH = osp.join(osp.dirname(osp.abspath(__file__)), 'data', 'camera_calibration')
