@@ -100,32 +100,9 @@ def run_cam_calib():  # Camera calibration
     folder_path = osp.join(osp.dirname(osp.abspath(__file__)), 'data', 'camera_calibration')
     camera = CameraControl()
     camera_calibration_chessboard(camera, 0.031, (8, 6), folder_path)
-    validate_calibration(camera, 0.031, (8, 6), folder_path, alpha=0, draw_chessboard=True) # compare alpha=0/1
-    camera.stop_stream()
-
-
-# Check rectified images
-def check_rectified():
-    camera = CameraControl()
-    folder_path = osp.join(osp.dirname(osp.abspath(__file__)), 'data', 'camera_calibration')
-    rms, camera_matrix, dist_coeffs = joblib.load(osp.join(folder_path, "intrinsics.pkl"))
-    camera.set_cam_calibration(camera_matrix, dist_coeffs, 480, 640)
-
-    while True:
-        img = camera.get_stream_img()
-        rect = camera.get_rectified_image(img)
-        if rect.shape[0] == 0 or rect.shape[1] == 0:
-            print("Fail to rectified images, please check if the previous step is successful")
-            break
-
-        cv2.imshow('Rect', rect)
-        k = cv2.waitKey(20)
-        if k != -1:
-            if ord('q') == k:
-                break
+    validate_calibration(camera, 0.031, (8, 6), folder_path, alpha=0, draw_chessboard=False) # compare alpha=0/1
     camera.stop_stream()
 
 
 if __name__ == '__main__':
     run_cam_calib()
-    check_rectified()
