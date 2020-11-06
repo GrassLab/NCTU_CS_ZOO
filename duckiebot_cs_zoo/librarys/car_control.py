@@ -16,6 +16,12 @@ except ImportError:
 
 
 class CarControl:
+    """Integrate control for car
+
+    Args:
+
+        `trim_val` (:obj:`float`): motor calibration parameter, default is 0.0
+    """
     motor_driver: DaguWheelsDriver = None
     kinematics: Kinematics = None
     pose_estimator: PoseEstimator = None
@@ -28,7 +34,13 @@ class CarControl:
 
     def move(self, velocity: float, omega: float):
         """
-        TODO: document for student
+        Set velocity and omega of car
+
+        Args:
+
+            velocity (:obj:`float`): positive value is forward, negative value is backword
+
+            omega (:obj:`float`): positive value is turn left, negative value is turn right
         """
         left_speed, right_speed = self.kinematics.inverse(
             velocity=velocity,
@@ -43,4 +55,13 @@ class CarControl:
         return
 
     def get_pose(self) -> Tuple[int, float, float, float]:
+        """
+        Get estimated pose for car
+
+        Return:
+
+            :obj:`Tuple` of (:obj:`int`, :obj:`float`, :obj:`float`, :obj:`float`)
+
+            time for ns unit (:obj:`int`), X (:obj:`float`), Y (:obj:`float`), theta (:obj:`float`)
+        """
         return self.pose_estimator.get_pose()
