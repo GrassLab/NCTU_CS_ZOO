@@ -2,7 +2,7 @@ import numpy as np
 import cv2, os, joblib
 import os.path as osp
 from utils.fileutils import check_path
-from controllers.camera_control import CameraControl
+from librarys.camera_control import CameraControl
 from datetime import datetime
 import shutil
 

@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from controllers.camera_control import CameraControl
+from librarys.camera_control import CameraControl
 
 X_OFFSET = 0.191
 Y_OFFSET = 0.093
