@@ -27,6 +27,7 @@ def camera_calibration_chessboard(camera, square_sz, board_size, folder_path, in
     world_points = []
     img_points = []
 
+    print(f"Calibrate camera using {len(file_list)} images...")
     for f in file_list:
         if f[-3:] != "png" and f[-3:] != "jpg":
             continue
@@ -44,7 +45,7 @@ def camera_calibration_chessboard(camera, square_sz, board_size, folder_path, in
 
     if len(world_points) < 20:
         print('Please collect at least 20 images on the precious step!')
-        return
+        return False
     rms, camera_matrix, dist_coeffs, _, _ = cv2.calibrateCamera(world_points, img_points, (w, h),
                                                                 None, None)
     print("Calibrated: rms={:5f}".format(rms))
@@ -53,6 +54,8 @@ def camera_calibration_chessboard(camera, square_sz, board_size, folder_path, in
     # A good result should have RMS lower than 0.5
     if rms > 0.7:
         print('Please do the calibration again')
+        return False
+    return True
 
 
 def validate_calibration(camera, square_sz, board_size, folder_path, intrinsics_name="intrinsics.pkl", alpha=0, draw_chessboard=False):
@@ -99,8 +102,8 @@ def validate_calibration(camera, square_sz, board_size, folder_path, intrinsics_
 def run_cam_calib():  # Camera calibration
     folder_path = osp.join(osp.dirname(osp.abspath(__file__)), 'data', 'camera_calibration')
     camera = CameraControl()
-    camera_calibration_chessboard(camera, 0.031, (8, 6), folder_path)
-    validate_calibration(camera, 0.031, (8, 6), folder_path, alpha=0, draw_chessboard=False) # compare alpha=0/1
+    if camera_calibration_chessboard(camera, 0.031, (8, 6), folder_path):
+        validate_calibration(camera, 0.031, (8, 6), folder_path, alpha=0, draw_chessboard=False) # compare alpha=0/1
     camera.stop_stream()
 
 
