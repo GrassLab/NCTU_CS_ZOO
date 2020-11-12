@@ -22,7 +22,7 @@ while True:
     key = data[:-1]
 
     # omega range is -8 to 8. The negative number means turning right, and the positive number means turing left.
-    # velocity range is 0 to 1. 0 is stop. 1 is moving forward with full speed. 0.3 is a good choice when you want to move forward.
+    # velocity range is -1 to 1. 0 is stop. 1 is moving forward with full speed. 0.3 is a good choice when you want to move forward.
     omega = 0
     velocity = 0
     # change the control message you use in Arduino nano, and give the corresponding omega and velocity
