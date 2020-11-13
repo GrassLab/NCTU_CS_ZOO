@@ -17,7 +17,7 @@ ser.flushInput()
 while True:
     # clear the previous message in buffer
     ser.flushInput()
-    # get the newest message from serial port
+    # get the newest message from the serial port
     data = ser.readline().decode("ascii")
     key = data[:-1]
 
@@ -31,10 +31,10 @@ while True:
         velocity = 0.3
     elif key == "left":
         omega = 2
-        velocity = -2
+        velocity = 0.15
     elif key == "right":
         omega = -2
-        velocity = -2
+        velocity = 0.15
     elif key == "stop":
         omega = 0
         velocity = 0
