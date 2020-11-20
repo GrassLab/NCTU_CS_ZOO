@@ -40,7 +40,7 @@ class LightControl:
     def change_rgb(
         self,
         light_pos: Union[LightPos, int], *,
-        red: float, green: float, blue: Flag,
+        red: float, green: float, blue: float,
     ):
         """
         Change red, green and blue brightness of speific light
