@@ -6,8 +6,11 @@ class CameraProducer:
     try:
         from libs.camera_control import CameraControl
     except ImportError:
-        from .camera_control import CameraControl
-    camera: CameraControl = CameraControl()
+        try:
+            from .camera_control import CameraControl
+        except ImportError:
+            CameraControl = None
+    camera: CameraControl = CameraControl() if CameraControl is not None else None
     max_framerate: int = 10
     jpeg_quality: int = 50
     prev_frametime: int = None
