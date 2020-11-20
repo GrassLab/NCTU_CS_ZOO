@@ -42,7 +42,8 @@ class BasicRemoteJoystick:
             light_udp: socket.socket,
             light_addr: tuple):
         self.motor_tcp = motor_tcp
-        self.motor_tcp.settimeout(1.0)
+        if self.motor_tcp is not None:
+            self.motor_tcp.settimeout(1.0)
         self.light_udp = light_udp
         self.light_addr = light_addr
 
@@ -50,10 +51,14 @@ class BasicRemoteJoystick:
         # by pass if previous command is the same when STOP
         if cmd is Command.STOP and self.prev_cmd is cmd:
             return True
-        self.motor_tcp.send(self.motor_data[cmd])
+        if self.motor_tcp is not None:
+            self.motor_tcp.send(self.motor_data[cmd])
         self.light_udp.sendto(self.light_data[cmd], self.light_addr)
         try:
-            ack: bytes = self.motor_tcp.recv(1)
+            if self.motor_tcp is not None:
+                ack: bytes = self.motor_tcp.recv(1)
+            else:
+                ack = b'\x21'
             ack = ack == b'\x21'
             if ack:
                 self.prev_cmd = cmd
@@ -110,7 +115,8 @@ if __name__ == "__main__":
     if len(sys.argv) < 3 or len(sys.argv) > 3:
         print(f'Usage: {sys.argv[0]} host port')
         sys.exit(-1)
-    host: str = sys.argv[1]
+    # to prevent mDNS fail
+    host: str = socket.gethostbyname(sys.argv[1])
     port: int = int(sys.argv[2])
 
     duckie_tcp = socket.socket(
@@ -123,12 +129,17 @@ if __name__ == "__main__":
     )
 
     # wait until connect duckie
-    deadline = time.time() + 5  # second
+    deadline = time.time() + 1  # second
     print(f'connect to {host}:{port}')
     while duckie_tcp.connect_ex((host, port)) != 0:
         if time.time() > deadline:
             print('wait to timeout')
-            sys.exit(-1)
+            res = input('Do you want to only test light? (Y/N) >>')
+            if res == "N":
+                sys.exit(-1)
+            else:
+                duckie_tcp = None
+                break
         time.sleep(0.5)
         print(f'retry to connect {host}:{port}')
 
@@ -176,6 +187,7 @@ if __name__ == "__main__":
     remote_joystick.handle(Command.STOP)
 
     cv2.destroyAllWindows()
-    duckie_tcp.close()
+    if duckie_tcp is not None:
+        duckie_tcp.close()
     duckie_udp.close()
     print('byebye')
