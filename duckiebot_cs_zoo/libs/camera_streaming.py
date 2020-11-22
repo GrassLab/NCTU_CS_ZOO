@@ -24,9 +24,6 @@ class CameraProducer:
     time = time
     import datetime
     datetime
-    import signal
-    signal = signal
-    orig_sigint_handler = signal.getsignal(signal.SIGINT)
 
     font_setting: dict = dict(
         fontFace=cv2.FONT_HERSHEY_SIMPLEX,
@@ -41,14 +38,6 @@ class CameraProducer:
             self.jpeg_quality = quality
         self.prev_frametime = self.time.time_ns() - (self.NANOSECOND / self.max_framerate)
         self.camera.start_stream()
-
-        if self.signal.getsignal(self.signal.SIGINT) is not self.handle_sigint:
-            self.signal.signal(self.signal.SIGINT, self.handle_sigint)
-
-    @classmethod
-    def handle_sigint(cls, *args):
-        cls.camera.stop_stream()
-        cls.orig_sigint_handler(*args)
 
     def get_img_bytedata(self) -> bytes:
         # control frame rate

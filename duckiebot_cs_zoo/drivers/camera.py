@@ -40,10 +40,16 @@ class CameraDevice:
         self.stream_img = None  # Latest streaming image in numpy array (no compression/compressed )
         self.is_streaming = False
         self.stream_thd = None
+        self.stream_framerate: float = None
 
     def grab_stream_img(self):
+        start_time = time.time()
+        counter = 0
         while self.is_streaming:
             yield self.stream  # Data written by capture_sequence
+            counter += 1
+            # almost equal to `self.camera.framerate`
+            self.stream_framerate = counter/(time.time() - start_time)
             stream_data = self.stream.getvalue()
             self.stream_img = self.pre_process_img(stream_data)
             self.stream.seek(0)
@@ -68,7 +74,6 @@ class CameraDevice:
         return self.pre_process_img(stream_data)
 
     def run_stream(self):
-        print('Streaming start')
         while self.is_streaming:
             gen = self.grab_stream_img()
             try:
@@ -80,15 +85,18 @@ class CameraDevice:
                 )
             except StopIteration:  # self.stop_stream=True, one time only
                 pass
-        print('Streaming stop')
 
     def start_stream_thd(self):
-        self.stream_thd = Thread(target=self.run_stream)
-        self.is_streaming = True
-        self.stream_thd.start()
+        if not self.is_streaming:
+            self.stream_thd = Thread(target=self.run_stream)
+            self.stream_thd.setDaemon(True)
+            self.is_streaming = True
+            self.stream_thd.start()
+            print('Streaming start')
 
     def stop_stream_thd(self):
         if self.is_streaming:
             self.is_streaming = False
-            self.stream_thd.join()
+            self.stream_thd.join(timeout=0.5)
             del self.stream_thd
+            print('Streaming stop')
