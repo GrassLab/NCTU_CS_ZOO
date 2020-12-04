@@ -7,6 +7,7 @@ from abc import abstractmethod
 from typing import Any
 import io
 import traceback
+import atexit
 
 HEADER_FMT_OBJECT_LEN = '<L' # <: little endian, L:unsigned long: 4 bytes for data length
 HEADER_SIZE_OBJECT_LEN = struct.calcsize(HEADER_FMT_OBJECT_LEN)
@@ -98,21 +99,37 @@ class BasicServer(TCPServer):
 
 
 class BasicClient:  # Must follow a send-recv routine
+    conn: socket.socket = None
+
+    def __init__(self) -> None:
+        atexit.register(self.__del__)
 
     def start_connection(self, server_addr, server_port):
+        if self.conn is not None:
+            raise RuntimeError('Client already connected')
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.conn.settimeout(3600)
+        # wait for 10 sec
+        self.conn.settimeout(10)
         self.conn.connect((server_addr, server_port))
-        print('Client connected')
+        print(f'Client connected {self.conn.getpeername()}')
         return self
 
     def stop_connection(self, stop_server=False):
-        if stop_server:
-            self.send_data(-1)
-        else:
-            self.send_data(0)
-        self.conn.shutdown(socket.SHUT_RDWR)
-        self.conn.close()
+        try:
+            if stop_server:
+                self.send_data(-1)
+            else:
+                self.send_data(0)
+            self.conn.shutdown(socket.SHUT_RDWR)
+            self.conn.close()
+        except OSError as e:
+            # OSError: [Errno 57] Socket is not connected is ok
+            if e.errno == 57:
+                pass
+            else:
+                raise
+        finally:
+            self.conn = None
         return self
 
     def send_data(self, obj):
@@ -125,6 +142,22 @@ class BasicClient:  # Must follow a send-recv routine
         with self.conn.makefile("rb", buffering=256) as rfile:
             return deserialize(rfile)
 
+    def __del__(self):
+        if self.conn is not None:
+            try:
+                self.conn.settimeout(0.01)
+                data = self.conn.recv(1, socket.MSG_DONTWAIT | socket.MSG_PEEK)
+                # socket already close
+                if len(data) ==0:
+                    return
+            except ConnectionResetError:
+                # socket already close for other reason
+                return
+            except BlockingIOError:
+                pass
+            except socket.timeout:
+                pass
+            self.stop_connection()
 
 def server_client_test():
     """
