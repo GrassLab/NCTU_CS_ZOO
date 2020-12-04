@@ -22,6 +22,7 @@ class DuckiebotClient:
 
         self.camera.restore_data(
             os.path.join(os.path.dirname(__file__), 'data', 'camera_calibration', 'camera_data.pkl'))
+        self.camera.set_jpeg()  # set faster streaming
 
     def __del__(self):
         pass
@@ -43,8 +44,6 @@ class DuckiebotClient:
                                                                               np.rad2deg(theta)))
 
     def get_rectified_image(self, img=None):  # Always use this for applications
-        if img is None:
-            img = self.camera.get_capture_img()
         return self.camera.get_rectified_image(img)
 
     def set_lights(self, light_dict):

@@ -24,10 +24,18 @@ class CameraControl(object):
             )
         getattr(self, f"set_{img_fmt}")()
         self.data = {}
+        self.decode_jpeg_fmt = self.decode_jpeg()
+        self.cur_fmt = self.get_fmt()
+
+    def check_decode(self, img): # Local decoding jpeg
+        if self.cur_fmt == 'jpeg' and not self.decode_jpeg_fmt:
+            return cv2.imdecode(img, 1)
+        else:
+            return img
 
     def get_capture_img(self):  # Better image quality
         fc = FunctionCall('get_capture_img')
-        return CameraControl.client.send_data(fc).recv_data()
+        return self.check_decode(CameraControl.client.send_data(fc).recv_data())
 
     def start_stream(self):
         fc = FunctionCall('start_stream')
@@ -39,13 +47,15 @@ class CameraControl(object):
 
     def get_stream_img(self):
         fc = FunctionCall('get_stream_img')
-        return CameraControl.client.send_data(fc).recv_data()
+        return self.check_decode(CameraControl.client.send_data(fc).recv_data())
 
     def set_jpeg(self):
+        self.cur_fmt = 'jpeg'
         fc = FunctionCall('set_jpeg')
         return CameraControl.client.send_data(fc).recv_data()
 
     def set_bgr(self):
+        self.cur_fmt = 'bgr'
         fc = FunctionCall('set_bgr')
         return CameraControl.client.send_data(fc).recv_data()
 
