@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-from pupil_apriltags import Detector
 
 colors = {'red': (0, 0, 255),  # BGR
           'green': (0, 255, 0),
@@ -9,7 +8,8 @@ colors = {'red': (0, 0, 255),  # BGR
           'yellow': (0, 255, 255)}
 
 
-def get_detector() -> Detector:
+def get_detector():
+    from pupil_apriltags import Detector
     return Detector(families='tag36h11',
                     nthreads=4,
                     quad_decimate=1.0,  # Full resolution

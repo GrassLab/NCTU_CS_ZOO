@@ -64,6 +64,14 @@ class BasicTCPHandler(BaseRequestHandler):
             self.send_data(send_obj)
         # self.request, self.server,self.client_address
 
+    def setup(self) -> None:
+        if hasattr(self.server, "setup_handler"):
+            self.server.setup_handler(self)
+    
+    def finish(self) -> None:
+        if hasattr(self.server, "finish_handler"):
+            self.server.finish_handler(self)
+
     def send_data(self, obj):
         with self.request.makefile('wb', buffering=256) as wfile:
             serialize(obj, wfile)

@@ -10,3 +10,7 @@ class CarServer(BasicServer):
         if isinstance(recv_obj, FunctionCall):
             func = getattr(self.car, recv_obj.name)
             return func(*recv_obj.args, **recv_obj.kwargs)
+
+    def finish_handler(self, handler):
+        # prevent client exit but setting is remain
+        self.car.move(velocity=0, omega=0)
