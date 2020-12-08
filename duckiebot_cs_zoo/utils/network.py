@@ -9,14 +9,17 @@ import io
 import traceback
 import atexit
 
-HEADER_FMT_OBJECT_LEN = '<L' # <: little endian, L:unsigned long: 4 bytes for data length
+HEADER_FMT_OBJECT_LEN = '<L'  # <: little endian, L:unsigned long: 4 bytes for data length
 HEADER_SIZE_OBJECT_LEN = struct.calcsize(HEADER_FMT_OBJECT_LEN)
+
+
 def serialize(obj: Any, buf: io.BytesIO):
     data = pickle.dumps(obj)
     header_obj_len_data = struct.pack(HEADER_FMT_OBJECT_LEN, len(data))
     buf.write(header_obj_len_data)
     buf.write(data)
     return
+
 
 def deserialize(buf: io.BytesIO) -> Any:
     data = b''
@@ -27,13 +30,14 @@ def deserialize(buf: io.BytesIO) -> Any:
         data += d
     header_obj_len_data, data = data[:HEADER_SIZE_OBJECT_LEN], data[HEADER_SIZE_OBJECT_LEN:]
     header_obj_len = struct.unpack(HEADER_FMT_OBJECT_LEN, header_obj_len_data)[0]
-    while len(data) < header_obj_len: 
+    while len(data) < header_obj_len:
         d = buf.read(header_obj_len - len(data))
         if d == b'':
             raise EOFError
         data += d
     ret_obj = pickle.loads(data)
     return ret_obj
+
 
 class BasicTCPHandler(BaseRequestHandler):
 
@@ -67,7 +71,7 @@ class BasicTCPHandler(BaseRequestHandler):
     def setup(self) -> None:
         if hasattr(self.server, "setup_handler"):
             self.server.setup_handler(self)
-    
+
     def finish(self) -> None:
         if hasattr(self.server, "finish_handler"):
             self.server.finish_handler(self)
@@ -154,9 +158,9 @@ class BasicClient:  # Must follow a send-recv routine
         if self.conn is not None:
             try:
                 self.conn.settimeout(0.01)
-                data = self.conn.recv(1, socket.MSG_DONTWAIT | socket.MSG_PEEK)
+                data = self.conn.recv(1, socket.MSG_PEEK)
                 # socket already close
-                if len(data) ==0:
+                if len(data) == 0:
                     return
             except ConnectionResetError:
                 # socket already close for other reason
@@ -166,6 +170,7 @@ class BasicClient:  # Must follow a send-recv routine
             except socket.timeout:
                 pass
             self.stop_connection()
+
 
 def server_client_test():
     """
