@@ -56,7 +56,7 @@ def debug_tag(color, tag_result):
     return color
 
 
-def detect_apriltags(color_img, five_points, cam_mat, detector: Detector, return_vis=False):
+def detect_apriltags(color_img, five_points, cam_mat, detector, return_vis=False):
     """
     :param color_img: cv2 image
     :param five_points: 5x3 np array (e.g., get_five_points((0,0),0.0125))
