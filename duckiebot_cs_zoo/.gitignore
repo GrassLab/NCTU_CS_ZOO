@@ -1,0 +1,14 @@
+.idea/
+./drivers/wheels_driver
+./duckietown_packages
+.DS_Store
+__pycache__/
+*.py[cod]
+*$py.class
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec

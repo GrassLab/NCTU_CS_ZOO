@@ -1,0 +1,7 @@
+RPI.GPIO
+picamera
+PyTurboJPEG
+opencv-python==4.4.0.46
+joblib
+numpy
+pyserial==3.4

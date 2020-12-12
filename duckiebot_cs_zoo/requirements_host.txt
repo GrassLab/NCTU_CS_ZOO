@@ -1,0 +1,8 @@
+opencv-python==4.4.0.46
+joblib
+scipy
+numpy
+pupil_apriltags
+math3d
+joblib
+

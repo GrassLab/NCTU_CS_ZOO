@@ -1,0 +1,17 @@
+# pi boot configurate
+# usually place at /boot/config.txt
+
+hdmi_force_hotplug=1
+enable_uart=0
+
+# camera settings, see http://elinux.org/RPiconfig#Camera
+# Enable camera
+start_x=1
+disable_camera_led=1
+gpu_mem=128
+
+# Enable audio (added by raspberrypi-sys-mods)
+dtparam=audio=on
+
+# Enable i2c
+dtparam=i2c_arm=on
