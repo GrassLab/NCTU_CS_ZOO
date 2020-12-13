@@ -5,4 +5,4 @@ numpy
 pupil_apriltags
 math3d
 joblib
-
+matplotlib
