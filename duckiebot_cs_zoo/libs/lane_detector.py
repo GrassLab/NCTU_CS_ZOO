@@ -41,6 +41,8 @@ class LaneDetector:
 
     def detect_lane(self, img, vis_normal=False):  # Main pipeline, TODO: Fill-in your parameters to each function
         """
+        HW11-Step2
+
         For each function marked with TODO:Fill-in, please copy the settings in your duckiebot_cs_zoo/app/lane/lane_detector_demo.py
         YOU MUST CAREFULLY CHECK AGAIN BEFORE THE NEXT STAGE
         """

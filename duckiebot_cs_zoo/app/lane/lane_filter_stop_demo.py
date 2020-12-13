@@ -11,10 +11,10 @@ def lane_filter_STOP_demo():
     colors = ['green', 'blue', 'red', 'yellow', 'cyan']
     duckiebot = DuckiebotClient()
     H = duckiebot.camera.data['cam_H']
-    COLOR_RANGE_FILE = 'my_colors.pkl'  # TODO: Fill-in your filename
+    COLOR_RANGE_FILE = 'my_colors.pkl'  # HW11-Step4 TODO: Fill-in your filename
     lane_dt = LaneDetector(colors, COLOR_RANGE_FILE)
     lane_filter_stop = LaneFilterStop(H)
-    t1 = time.time_ns()
+    t1 = time.time()
     frame = 0
     while True:
         frame += 1
@@ -42,7 +42,7 @@ def lane_filter_STOP_demo():
         print(f'Estimate: dist={dist * 100:.2f}cm')
         if k == 'q':
             break
-    print(f'FPS={frame * 1e9 / (time.time_ns() - t1):.2f}')
+    print(f'FPS={frame  / (time.time() - t1):.2f}')
 
 
 if __name__ == '__main__':

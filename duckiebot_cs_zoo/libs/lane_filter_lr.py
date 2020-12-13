@@ -140,12 +140,9 @@ class LaneFilterLR:  # For Left and Right lane
         # for phi_idx, d_idx in zip(valid_phi_1d, valid_d_1d):
         #     prob[new_phi_idx[phi_idx, d_idx], new_d_idx[phi_idx, d_idx]] += self.belief[phi_idx, d_idx]
 
-        # print('T1={:.3f} us'.format((time.time_ns() - t1) / 1000))
-
         # """
         # Equivalent version
         # """
-        # t2 = time.time_ns()
         # prob2 = np.zeros_like(self.belief)
         # for phi_idx in range(self.belief.shape[0]):
         #     for d_idx in range(self.belief.shape[1]):
@@ -156,7 +153,6 @@ class LaneFilterLR:  # For Left and Right lane
         #                 np.floor((d_new[phi_idx, d_idx] - self.params.d_min) / self.params.delta_d))
         #             if 0 <= phi_2 < self.params.N_bins_phi and 0 <= d_2 < self.params.N_bins_d:
         #                 prob2[phi_2, d_2] += self.belief[phi_idx, d_idx]
-        # print('T2={:.3f} us'.format((time.time_ns() - t2) / 1000))
         # print(np.allclose(prob, prob2))
 
         """

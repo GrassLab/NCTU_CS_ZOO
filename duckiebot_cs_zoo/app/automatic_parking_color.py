@@ -14,26 +14,24 @@ def HW11():
                                      2: [1, 1, 1],
                                      4: [1, 1, 1]})
     duckiebot.set_trim(0.01)  # From your calibration
-    COLOR_RANGE_FILE = 'my_colors.pkl'  # TODO: Fill-in your filename
+    COLOR_RANGE_FILE = 'my_colors.pkl'  # HW11-Step6 TODO: Fill-in your filename
     H = duckiebot.camera.data['cam_H']
     lane_dt = LaneDetector(colors, COLOR_RANGE_FILE)
     lane_filter_stop = LaneFilterStop(H)
     lane_filter_lr = LaneFilterLR(H)
     frame = 0
     omega = vel = phi = 0
-    t0 = t1 = time.time_ns()
+    t0 = t1 = time.time()
     while True:
         frame += 1
-        rect_img = duckiebot.get_rectified_image()  # You can get this from a video file XD
-        k = show_img(rect_img, 'Rect', 10, False)
-        if k == 'q':
-            break
+        rect_img = duckiebot.get_rectified_image()
 
         detections = lane_dt.detect_lane(rect_img, vis_normal=False)
-        lane_filter_lr.prediction(omega, vel, (time.time_ns() - t1) / 1e9)  # 0,0,0 is also ok
-        lane_filter_stop.prediction(vel, phi, (time.time_ns() - t1) / 1e9)  # 0,0,0 is also ok
+        lane_filter_lr.prediction(omega, vel, (time.time() - t1))  # 0,0,0 is also ok
+        lane_filter_stop.prediction(vel, phi, (time.time() - t1))  # 0,0,0 is also ok
 
         # >>> No Detection Visualization
+        # k = show_img(rect_img, 'Rect', 10, False)
         # lane_filter_lr.update_posterior(detections, return_vis=False)
         # lane_filter_stop.update_posterior(detections, return_vis=False)
         # <<< No Detection visualization
@@ -50,13 +48,15 @@ def HW11():
         phi, d = lane_filter_lr.get_estimate()
         dist = lane_filter_stop.get_estimate()
         print(f'Estimate: D={d * 100:.2f}cm, Phi={np.rad2deg(phi):.2f},  DistStop={dist * 100:.2f}cm')
+        if k == 'q':
+            break
         if frame > 10:  # We ignore the first 10 (possibly in-accurate) frames
             """
             TODO: Design Your Move Logic
             """
             pass
 
-    print(f'FPS={frame * 1e9 / (time.time_ns() - t0):.2f}')
+    print(f'FPS={frame / (time.time() - t0):.2f}')
     duckiebot.set_lights(light_dict={0: [0, 0, 0],
                                      2: [0, 0, 0],
                                      4: [0, 0, 0]})

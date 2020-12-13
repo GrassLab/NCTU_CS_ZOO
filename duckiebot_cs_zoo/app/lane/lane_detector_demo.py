@@ -11,6 +11,8 @@ import warnings
 
 def lane_detection_pipeline_single():
     """
+    HW11-Step1
+
     In this example, you can tune and visualize our lane detector pipeline in each step.
     Please make sure you get good result in the final visualization in "improc.calc_normal"
     Note: Please create a clean workspace (better surrounded with white papers) for experiments

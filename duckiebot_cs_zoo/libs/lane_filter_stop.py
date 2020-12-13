@@ -166,6 +166,8 @@ class LaneFilterStop:
                     valid_bottom_select = (np.abs(angles)) < self.params.angle_considered
                     if color in ['red', 'yellow']:
                         """
+                        HW11-Step5
+                        
                         HW11 Hints: Your codes will only use the following variables
                         mids_[top/bottom],normals_[top/bottom]: Both arrays have size Nx2, N represents the detected number of line segments
                         self.params.marker_width[color]: width of the color chunks
