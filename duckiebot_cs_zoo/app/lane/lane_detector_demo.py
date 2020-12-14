@@ -27,11 +27,12 @@ def lane_detection_pipeline_single():
         - Comment the lines with "Use this at the first time"
         - Uncomment the lines with "Use this later"
 
-    Pay attention on the lines with "TODO: decide your parameters"
+    Pay attention on the lines with "TODO: decide your xxx"
     After all parameters are tuned, please fill-in to the "detect_lane" function in your duckiebot_cs_zoo/libs/lane_detector.py
     """
     colors = ['green', 'blue', 'red', 'yellow', 'cyan']
     duckiebot = DuckiebotClient()
+    # TODO: decide your light condition, if your room/space is not bright, you can turn on the lights, otherwise, "explicitly" turn off the lights
     duckiebot.set_lights(light_dict={0: [1, 1, 1],
                                      2: [1, 1, 1],
                                      4: [1, 1, 1]})
@@ -50,7 +51,10 @@ def lane_detection_pipeline_single():
     b1 = improc.color_balance(rect_img, percent=percent, clip_low=False, clip_high=True)
     b2 = improc.color_balance(rect_img, percent=percent, clip_low=True, clip_high=False)
     b3 = improc.color_balance(rect_img, percent=percent, clip_low=True, clip_high=True)
-    vis_p1 = np.hstack([rect_img, b1, b2, b3])
+    # You will see four images
+    # Original b1
+    # b2       b3
+    vis_p1 = np.vstack([np.hstack([rect_img, b1]), np.hstack([b2, b3])])
     show_img(vis_p1, 'ColorBalance')
 
     # Image to be processed

@@ -10,6 +10,7 @@ from app.remote_client import DuckiebotClient
 def HW11():
     colors = ['green', 'blue', 'red', 'yellow', 'cyan']
     duckiebot = DuckiebotClient()
+    # HW11-Step6 TODO: decide your light condition, if your room/space is not bright, you can turn on the lights, otherwise, "explicitly" turn off the lights
     duckiebot.set_lights(light_dict={0: [1, 1, 1],
                                      2: [1, 1, 1],
                                      4: [1, 1, 1]})
@@ -52,7 +53,7 @@ def HW11():
             break
         if frame > 10:  # We ignore the first 10 (possibly in-accurate) frames
             """
-            TODO: Design Your Move Logic
+            HW11-Step6 TODO: Design Your Move Logic
             """
             pass
 
