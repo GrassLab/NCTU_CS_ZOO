@@ -10,12 +10,13 @@ def lane_filter_LR_demo():
     colors = ['green', 'blue', 'red', 'yellow', 'cyan']
     duckiebot = DuckiebotClient()
     # HW11-Step3 TODO: decide your light condition, if your room/space is not bright, you can turn on the lights, otherwise, "explicitly" turn off the lights
-    duckiebot.set_lights(light_dict={0: [1, 1, 1],
-                                     2: [1, 1, 1],
-                                     4: [1, 1, 1]})
+    duckiebot.set_lights(light_dict={0: [0, 0, 0],
+                                     2: [0, 0, 0],
+                                     4: [0, 0, 0]})
     H = duckiebot.camera.data['cam_H']
     COLOR_RANGE_FILE = 'my_colors.pkl'  # HW11-Step3 TODO: Fill-in your filename
-    lane_dt = LaneDetector(colors, COLOR_RANGE_FILE)
+    COLOR_BALANCE_FILE = 'my_balance.pkl'  # TODO: Fill-in your filename
+    lane_dt = LaneDetector(colors, COLOR_RANGE_FILE, COLOR_BALANCE_FILE)
     lane_filter_lr = LaneFilterLR(H)
     t1 = time.time()
     frame = 0

@@ -126,6 +126,57 @@ def color_balance(img, percent=70, clip_low=True, clip_high=True,
     return cv2.merge(out_channels)
 
 
+# Version 2
+def calculate_color_balance(img, percent=70, clip_low=True, clip_high=True,
+                            image_height_clip_ratio=0.3, ):  # "Illumination compensation" in the duckietown paper
+    """
+    Source: https://gist.github.com/DavidYKay/9dad6c4ab0d8d7dbf3dc
+    :param img: H,W,3 uint8 image
+    :param percent: percentage in (0,100), e.g., percent=30, then 15% is clipped for low value and 15% is clipped for high value
+    :param clip_high: If false, not perform high-value clip (hv is a constant=255)
+    :param clip_low: If false, not perform low-value clip (lv is a constant=0)
+                   These value may depends on you ground condition
+                       e.g., for dark background, clip_low=True, clip_high=False
+                       e.g., for light background, clip_low=False, clip_high=True
+    :param image_height_clip_ratio: Useful for only considering the "ground pixels" for threshold calculation
+    :return: lut_channels: [lut_b,lut_g,lut_r] look-up tables for all colors
+    """
+    lut_channels = []
+    if image_height_clip_ratio != 0:
+        h_start = int(img.shape[0] * image_height_clip_ratio)
+        img_down = img[h_start:, :, :]
+    else:
+        img_down = img
+
+    down = cv2.resize(img_down, (0, 0), fx=0.25, fy=0.25)
+    down_channels = cv2.split(down)  # Down-sampled (with height_clip) image
+    img_channels = cv2.split(img)  # Original image
+    total_stop = down_channels[0].shape[0] * down_channels[0].shape[1] * percent / 200.0
+    for down_c, img_c in zip(down_channels, img_channels):
+        bc = cv2.calcHist([down_c], [0], None, [256], (0, 256), accumulate=False)
+        if clip_low:
+            lv = np.searchsorted(np.cumsum(bc), total_stop)
+        else:
+            lv = 0
+        if clip_high:
+            hv = 255 - np.searchsorted(np.cumsum(bc[::-1]), total_stop)
+        else:
+            hv = 255
+        lut = np.array(
+            [0 if i < lv else (255 if i > hv else round(float(i - lv) / float(hv - lv) * 255)) for i in
+             np.arange(0, 256)], dtype="uint8")
+        lut_channels.append(lut)
+    return lut_channels
+
+
+def apply_color_balance(image, lut_channels):
+    img_channels = cv2.split(image)  # Original image
+    out_channels = []
+    for lut, img_c in zip(lut_channels, img_channels):
+        out_channels.append(cv2.LUT(img_c, lut))
+    return cv2.merge(out_channels)
+
+
 def find_edges(img, canny_thresh1=80, canny_thresh2=200, canny_aperture_size=3, vis=False):
     # Check 'Hysteresis Thresholding' on https://docs.opencv.org/master/d7/de1/tutorial_js_canny.html
     if not vis:

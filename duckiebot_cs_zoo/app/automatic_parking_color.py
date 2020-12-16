@@ -11,13 +11,14 @@ def HW11():
     colors = ['green', 'blue', 'red', 'yellow', 'cyan']
     duckiebot = DuckiebotClient()
     # HW11-Step6 TODO: decide your light condition, if your room/space is not bright, you can turn on the lights, otherwise, "explicitly" turn off the lights
-    duckiebot.set_lights(light_dict={0: [1, 1, 1],
-                                     2: [1, 1, 1],
-                                     4: [1, 1, 1]})
+    duckiebot.set_lights(light_dict={0: [0, 0, 0],
+                                     2: [0, 0, 0],
+                                     4: [0, 0, 0]})
     duckiebot.set_trim(0.01)  # From your calibration
     COLOR_RANGE_FILE = 'my_colors.pkl'  # HW11-Step6 TODO: Fill-in your filename
+    COLOR_BALANCE_FILE = 'my_balance.pkl'  # HW11-Step6 TODO: Fill-in your filename
     H = duckiebot.camera.data['cam_H']
-    lane_dt = LaneDetector(colors, COLOR_RANGE_FILE)
+    lane_dt = LaneDetector(colors, COLOR_RANGE_FILE, COLOR_BALANCE_FILE)
     lane_filter_stop = LaneFilterStop(H)
     lane_filter_lr = LaneFilterLR(H)
     frame = 0

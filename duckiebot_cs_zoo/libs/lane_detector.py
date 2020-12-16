@@ -16,11 +16,26 @@ class Detection:
 class LaneDetector:
     DATA_PATH = check_path(osp.join(osp.dirname(osp.abspath(__file__)), 'data', 'lane_detector'))
 
-    def __init__(self, color_names, color_range_file=None):
+    def __init__(self, color_names, color_range_file=None, color_balance_file=None):
         self.color_names = color_names
         self.color_ranges = {}
+        self.color_balance_luts = None
         if color_range_file is not None:
             self.load_color_ranges(color_range_file)
+        if color_balance_file is not None:
+            self.load_color_balance(color_balance_file)
+
+    def load_color_balance(self, file_name):
+        self.color_balance_luts = joblib.load(osp.join(self.DATA_PATH, file_name))
+
+    def set_color_balance(self, luts, file_name=None):
+        assert len(luts) == 3
+        if file_name is not None:
+            joblib.dump(luts, osp.join(self.DATA_PATH, file_name))
+        self.color_balance_luts = luts
+
+    def apply_color_balance(self, img):
+        return improc.apply_color_balance(img, self.color_balance_luts)
 
     def load_color_ranges(self, file_name):
         color_ranges = joblib.load(osp.join(self.DATA_PATH, file_name))
@@ -46,8 +61,9 @@ class LaneDetector:
         For each function marked with TODO:Fill-in, please copy the settings in your duckiebot_cs_zoo/app/lane/lane_detector_demo.py
         YOU MUST CAREFULLY CHECK AGAIN BEFORE THE NEXT STAGE
         """
-        # Step1: Color Balance Pipeline
-        img = improc.color_balance(img, 30, True, True)  # TODO:Fill-in
+        # Step1: Color Balance Pipeline (updated version, no modification required)
+        img = self.apply_color_balance(img)
+
         # Step2: Color Segmentation Using HSV
         hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         # Step3: Find All Edges and return a binary map (either 0 or 255)

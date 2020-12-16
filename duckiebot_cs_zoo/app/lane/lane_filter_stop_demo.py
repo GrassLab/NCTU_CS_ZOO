@@ -11,12 +11,13 @@ def lane_filter_STOP_demo():
     colors = ['green', 'blue', 'red', 'yellow', 'cyan']
     duckiebot = DuckiebotClient()
     # HW11-Step4 TODO: decide your light condition, if your room/space is not bright, you can turn on the lights, otherwise, "explicitly" turn off the lights
-    duckiebot.set_lights(light_dict={0: [1, 1, 1],
-                                     2: [1, 1, 1],
-                                     4: [1, 1, 1]})
+    duckiebot.set_lights(light_dict={0: [0, 0, 0],
+                                     2: [0, 0, 0],
+                                     4: [0, 0, 0]})
     H = duckiebot.camera.data['cam_H']
     COLOR_RANGE_FILE = 'my_colors.pkl'  # HW11-Step4 TODO: Fill-in your filename
-    lane_dt = LaneDetector(colors, COLOR_RANGE_FILE)
+    COLOR_BALANCE_FILE = 'my_balance.pkl'  # TODO:  Fill-in your filename
+    lane_dt = LaneDetector(colors, COLOR_RANGE_FILE, COLOR_BALANCE_FILE)
     lane_filter_stop = LaneFilterStop(H)
     t1 = time.time()
     frame = 0
@@ -46,7 +47,7 @@ def lane_filter_STOP_demo():
         print(f'Estimate: dist={dist * 100:.2f}cm')
         if k == 'q':
             break
-    print(f'FPS={frame  / (time.time() - t1):.2f}')
+    print(f'FPS={frame / (time.time() - t1):.2f}')
 
 
 if __name__ == '__main__':
