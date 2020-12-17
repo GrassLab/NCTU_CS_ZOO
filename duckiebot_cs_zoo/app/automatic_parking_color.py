@@ -31,7 +31,7 @@ def HW11():
         detections = lane_dt.detect_lane(rect_img, vis_normal=False)
         lane_filter_lr.prediction(omega, vel, (time.time() - t1))  # 0,0,0 is also ok
         lane_filter_stop.prediction(vel, phi, (time.time() - t1))  # 0,0,0 is also ok
-
+        t1 = time.time()
         # >>> No Detection Visualization
         # k = show_img(rect_img, 'Rect', 10, False)
         # lane_filter_lr.update_posterior(detections, return_vis=False)
