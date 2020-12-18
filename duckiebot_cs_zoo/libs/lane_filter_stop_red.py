@@ -176,7 +176,7 @@ class LaneFilterStop:
                             normals_top = normals[valid_top_select]
                             # Start >>> Your code here
                             """
-                            PASTE YOUR CODE HERE, Calculate the correct dist2parking with the same length as the normals_top
+                            Challenge11 PASTE YOUR CODE HERE, Calculate the correct dist2parking with the same length as the normals_top
                             """
                             dist2parking = np.zeros(len(normals_top))  # Fake result, write your own correct one
                             # End <<< Your code here
@@ -186,7 +186,7 @@ class LaneFilterStop:
                             normals_bottom = normals[valid_bottom_select]
                             # Start >>> Your code here
                             """
-                            PASTE YOUR CODE HERE, Calculate the correct dist2parking with the same length as the normals_bottom
+                            Challenge11 PASTE YOUR CODE HERE, Calculate the correct dist2parking with the same length as the normals_bottom
                             """
                             dist2parking = np.zeros(len(normals_bottom))  # Fake result, write your own correct one
                             # End <<< Your code here
