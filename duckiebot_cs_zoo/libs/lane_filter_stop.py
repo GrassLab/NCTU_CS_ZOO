@@ -9,12 +9,12 @@ from utils.image_processing import fig2img
 LaneFilterStop: Stop Position Lane Filter
 Estimate the current distance to the stop position using horizontal lines
 
----  RED  --- +17cm
+---  RED  --- +16.6cm
 
---- YELLOW--- + 7cm
+--- YELLOW--- + 7.6cm
 --- STOP+ --- 0cm
 
----  Cyan --- -9cm
+---  Cyan --- -8.95cm
 
 
 """
@@ -26,9 +26,9 @@ class LaneFilterParamsStop:
                     'cyan': 0.02}  # Close
     # Color chunk (bottom edge) distance to the center point for parking
     line_dist = {
-        'red': 0.17,
-        'yellow': 0.07,
-        'cyan': -0.09
+        'red': 0.166,
+        'yellow': 0.076,
+        'cyan': -0.0895
     }
 
     N_bins_dist = 71
