@@ -33,7 +33,7 @@ class LaneFilterParamsLRduckie:
     marker_width = {'white': 0.05,  # Right
                     'yellow': 0.025}  # Left
     # Lane width (the road in white)
-    lane_width = 0.21
+    lane_width = 0.205
 
     # Histogram setting
     # (phi,d) current planar pose relative to the lane center (+x forward, +y (align with d) on left)

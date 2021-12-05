@@ -33,7 +33,7 @@ class LaneFilterParamsLR:
     marker_width = {'blue': 0.02,  # Right
                     'green': 0.02}  # Left
     # Lane width (the road in white)
-    lane_width = 0.16
+    lane_width = 0.157
 
     # Histogram setting
     # (phi,d) current planar pose relative to the lane center (+x forward, +y (align with d) on left)
