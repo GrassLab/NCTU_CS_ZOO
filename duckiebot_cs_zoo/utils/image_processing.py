@@ -191,7 +191,7 @@ def find_edges(img, canny_thresh1=80, canny_thresh2=200, canny_aperture_size=3, 
         while True:
             t1 = cv2.getTrackbarPos('Canny Thresh1', 'Canny Edges')
             t2 = cv2.getTrackbarPos('Canny Thresh2', 'Canny Edges')
-            apt_sz = np.clip(cv2.getTrackbarPos('Aperture size', 'Canny Edges'), 3, 7)
+            apt_sz = np.clip(cv2.getTrackbarPos('Aperture size(3-7)', 'Canny Edges'), 3, 7)
             edges = cv2.Canny(img, t1, t2, apertureSize=apt_sz)
             vis = np.hstack([img, cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)])
             cv2.imshow('Canny Edges', vis)
